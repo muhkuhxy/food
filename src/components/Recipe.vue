@@ -58,7 +58,7 @@ export default {
     },
     calsPer100 () {
       const total = this.totalAmount
-      const exact = this.recipe.ingredients.reduce((memo, ingredient, index) => {
+      const exact = this.recipe.ingredients.reduce((memo, ingredient) => {
         if (ingredient.amount == null || ingredient.id == null) {
           return memo
         }

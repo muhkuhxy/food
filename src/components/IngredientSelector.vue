@@ -14,10 +14,9 @@ export default {
   },
   methods: {
     updateName (event) {
-      let newName = event.target.value
-      let ingredient = this.ingredients.find(x => x.name === newName)
-      if (ingredient) {
-        this.$emit('matchingIngredient', ingredient)
+      this.name = event.target.value
+      if (this.ingredient) {
+        this.$emit('matchingIngredient', this.ingredient)
       } else {
         this.$emit('noMatchingIngredient')
       }
@@ -30,7 +29,10 @@ export default {
   },
   computed: {
     ...mapState(['ingredients']),
-    ...mapGetters(['ingredientsById'])
+    ...mapGetters(['ingredientsById']),
+    ingredient () {
+      return this.ingredients.find(x => x.name === this.name)
+    }
   }
 }
 </script>
