@@ -12,6 +12,7 @@
   "dependencies": {
     "normalizr": "^3.3.0",
     "vue": "^2.5.22",
+    "vue-material": "^1.0.0-beta-10.2",
     "vue-router": "^3.0.2",
     "vuex": "^3.1.0"
   },
