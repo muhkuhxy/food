@@ -5,12 +5,12 @@
     <div>Gesamt: {{ totalAmount }}</div>
     <div>Kalorien pro 100g: {{ calsPer100 }}</div>
     <h3>Zutaten <button @click="addIngredient">+</button></h3>
-    <div v-for="(ingredientId, index) in recipe.ingredients" :key="index">
+    <div v-for="(ingredientRef, index) in recipe.ingredients" :key="index">
       <button @click="removeIngredient(index)">-</button>
-      <IngredientSelector :id="ingredientId" @matchingIngredient="ingredientMatched($event, index)" @noMatchingIngredient="unmatchedIngredient(index)"></IngredientSelector>
-      <label v-if="ingredientId">Menge <input type="number" v-model="recipe.amounts[index]"/>
+      <IngredientSelector :id="ingredientRef.id" @matchingIngredient="ingredientMatched($event, index)" @noMatchingIngredient="unmatchedIngredient(index)"></IngredientSelector>
+      <label>Menge <input type="number" v-model="ingredientRef.amount"/>
       </label>
-      <Nutrients :id="ingredientId"></Nutrients>
+      <Nutrients :id="ingredientRef.id"></Nutrients>
     </div>
   </div>
 </template>
@@ -34,8 +34,7 @@ export default {
     return {
       recipe: {
         name: null,
-        ingredients: [],
-        amounts: []
+        ingredients: []
       },
     }
   },
@@ -53,18 +52,18 @@ export default {
     ...mapState(['recipes', 'ingredients']),
     ...mapGetters(['ingredientsById']),
     totalAmount () {
-      return this.recipe.amounts.reduce((memo, amount) => {
-        return amount == null ? memo : memo + +amount
+      return this.recipe.ingredients.reduce((memo, ingredient) => {
+        return ingredient.amount == null ? memo : memo + +ingredient.amount
       }, 0)
     },
     calsPer100 () {
       const total = this.totalAmount
-      const exact = this.recipe.ingredients.reduce((memo, ingredientId, index) => {
-        if (ingredientId == null || this.recipe.amounts[index] == null) {
+      const exact = this.recipe.ingredients.reduce((memo, ingredient, index) => {
+        if (ingredient.amount == null || ingredient.id == null) {
           return memo
         }
         else {
-          return memo + (+this.recipe.amounts[index] * this.ingredientsById[ingredientId].calories / total)
+          return memo + (+ingredient.amount * this.ingredientsById[ingredient.id].calories / total)
         }
       }, 0)
       return (isNaN(exact) ? 0 : exact).toFixed(2)
@@ -81,22 +80,21 @@ export default {
       if (!this.recipe.ingredients) {
         Vue.set(this.recipe, 'ingredients', [])
       }
-      this.recipe.ingredients.push(null)
-      this.recipe.amounts.push(null)
+      this.recipe.ingredients.push({
+        id: null,
+        amount: null
+      })
       save.call(this)
     },
     removeIngredient (index) {
       this.recipe.ingredients.splice(index, 1)
-      this.recipe.amounts.splice(index, 1)
       save.call(this)
     },
     ingredientMatched (ingredient, index) {
-      this.recipe.ingredients.splice(index, 1, ingredient.id)
+      this.recipe.ingredients[index].id = ingredient.id
     },
     unmatchedIngredient (index) {
-      if (this.recipe.ingredients[index] != null) {
-        this.recipe.ingredients.splice(index, 1, null)
-      }
+      this.recipe.ingredients[index].id = null
     }
   }
 }
