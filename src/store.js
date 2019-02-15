@@ -43,6 +43,16 @@ export default new Vuex.Store({
     changeRecipe (state, { recipe, id }) {
       state.recipes[id] = recipe
       util.save(state.recipes)
+    },
+    saveIngredient (state, { name, id }) {
+      state.ingredients.push({
+        id,
+        name,
+        calories: null,
+        carbs: null,
+        proteins: null,
+        fat: null,
+      })
     }
   },
   getters: {

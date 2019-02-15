@@ -1,9 +1,9 @@
 <template>
-  <ul v-if="ingredient">
-    <li>Kalorien: {{ ingredient.calories }}</li>
-    <li>Kohlenhydrate: {{ ingredient.carbs }}</li>
-    <li>Eiweiss: {{ ingredient.protein }}</li>
-    <li>Fett: {{ ingredient.fat }}</li>
+  <ul>
+    <li>Kalorien: {{ ingredient ? ingredient.calories : null }}</li>
+    <li>Kohlenhydrate: {{ ingredient ? ingredient.carbs : null }}</li>
+    <li>Eiweiss: {{ ingredient ? ingredient.protein : null }}</li>
+    <li>Fett: {{ ingredient ? ingredient.fat : null }}</li>
   </ul>
 </template>
 

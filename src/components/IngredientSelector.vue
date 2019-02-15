@@ -1,9 +1,13 @@
 <template>
-  <label><input type="text" :value="name" placeholder="Zutat" @input="updateName"/></label>
+  <div>
+    <input type="text" :value="name" placeholder="Zutat" @input="updateName"/>
+    <button v-if="exists" @click="$emit('saveIngredient', name)">+</button>
+    <a v-if="name" :href="`https://www.google.com/search?q=${name}+n%C3%A4hrwerte`" target="_blank">Google</a>
+  </div>
 </template>
 
 <script>
-import { mapState, mapGetters } from 'vuex'
+import { mapState, mapGetters, mapMutations } from 'vuex'
 
 export default {
   props: ['id'],
@@ -30,9 +34,19 @@ export default {
   computed: {
     ...mapState(['ingredients']),
     ...mapGetters(['ingredientsById']),
+    ...mapMutations(['addIngredient']),
     ingredient () {
       return this.ingredients.find(x => x.name === this.name)
+    },
+    exists () {
+      return this.name && !this.ingredient
     }
   }
 }
 </script>
+
+<style lang="css" scoped>
+div {
+  display: inline-block;
+}
+</style>

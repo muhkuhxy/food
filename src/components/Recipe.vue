@@ -7,7 +7,11 @@
     <h3>Zutaten <button @click="addIngredient">+</button></h3>
     <div v-for="(ingredientRef, index) in recipe.ingredients" :key="index">
       <button @click="removeIngredient(index)">-</button>
-      <IngredientSelector :id="ingredientRef.id" @matchingIngredient="ingredientMatched($event, index)" @noMatchingIngredient="unmatchedIngredient(index)"></IngredientSelector>
+      <IngredientSelector :id="ingredientRef.id"
+        @matchingIngredient="ingredientMatched($event, index)"
+        @noMatchingIngredient="unmatchedIngredient(index)"
+        @saveIngredient="ingredientSaved(index, $event)">
+      </IngredientSelector>
       <label>Menge <input type="number" v-model="ingredientRef.amount"/>
       </label>
       <Nutrients :id="ingredientRef.id"></Nutrients>
@@ -70,7 +74,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['load', 'changeName', 'changeRecipe']),
+    ...mapMutations(['load', 'changeName', 'changeRecipe', 'saveIngredient']),
     changeIngredient (event, index) {
       // console.log(`changing ${index}'s ${event.field} to ${event.value}`)
       this.recipe.ingredients[index][event.field] = event.value
@@ -95,6 +99,11 @@ export default {
     },
     unmatchedIngredient (index) {
       this.recipe.ingredients[index].id = null
+    },
+    ingredientSaved (index, name) {
+      let id = Math.max.apply(null, this.ingredients.map(x => x.id)) + 1
+      this.saveIngredient({ name, id })
+      this.recipe.ingredients[index].id = id
     }
   }
 }
