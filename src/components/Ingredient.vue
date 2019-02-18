@@ -1,38 +1,41 @@
 <template>
-  <md-card>
-    <md-card-header>
-      <md-autocomplete v-model="name" @input="updateName" :md-options="ingredientNames" :md-fuzzy-search="true">
-        <label>Zutat</label>
-      </md-autocomplete>
-    </md-card-header>
-    <md-card-content>
-      <md-field>
-        <label>Menge (in kg oder l)</label>
-        <md-input type="number" :value="ingredientRef.amount" @input="$emit('changeAmount', $event)"/>
-      </md-field>
-    </md-card-content>
-    <md-card-expand>
-      <md-card-actions md-alignment="space-between">
-        <div>
-          <md-button @click="createNewIngredient" class="md-primary save-recipe" :disabled="!isNew">
-            <md-icon>open_in_new</md-icon>
-            <span class="save-recipe-label">Speichern</span>
-          </md-button>
-          <md-button class="md-accent" @click="$emit('removeIngredient')">Entfernen</md-button>
-        </div>
-        <md-card-expand-trigger>
-          <md-button class="md-icon-button">
-            <md-icon>keyboard_arrow_down</md-icon>
-          </md-button>
-        </md-card-expand-trigger>
-      </md-card-actions>
-      <md-card-expand-content>
-        <md-card-content>
-          <Nutrients :id="ingredientRef.id"></Nutrients>
-        </md-card-content>
-      </md-card-expand-content>
-    </md-card-expand>
-  </md-card>
+  <div>
+    <md-card>
+      <md-card-header>
+        <md-autocomplete v-model="name" @input="updateName" :md-options="ingredientNames" :md-fuzzy-search="true">
+          <label>Zutat</label>
+        </md-autocomplete>
+      </md-card-header>
+      <md-card-content>
+        <md-field>
+          <label>Menge (in kg oder l)</label>
+          <md-input type="number" :value="ingredientRef.amount" @input="$emit('changeAmount', $event)"/>
+        </md-field>
+      </md-card-content>
+      <md-card-expand>
+        <md-card-actions md-alignment="space-between">
+          <div>
+            <md-button @click="showIngredientDialog = true" class="md-primary save-recipe" :disabled="!isNew">
+              <md-icon>open_in_new</md-icon>
+              <span class="save-recipe-label">Speichern</span>
+            </md-button>
+            <md-button class="md-accent" @click="$emit('removeIngredient')">Entfernen</md-button>
+          </div>
+          <md-card-expand-trigger>
+            <md-button class="md-icon-button">
+              <md-icon>keyboard_arrow_down</md-icon>
+            </md-button>
+          </md-card-expand-trigger>
+        </md-card-actions>
+        <md-card-expand-content>
+          <md-card-content>
+            <Nutrients :id="ingredientRef.id"></Nutrients>
+          </md-card-content>
+        </md-card-expand-content>
+      </md-card-expand>
+    </md-card>
+    <NewIngredient :active="showIngredientDialog" :name="name" @close="showIngredientDialog = false" @save="createNewIngredient($event); showIngredientDialog = false"></NewIngredient>
+  </div>
 </template>
 
 <style scoped>
@@ -48,6 +51,7 @@
 <script>
 import { mapState, mapGetters, mapMutations } from 'vuex'
 import Nutrients from './Nutrients.vue'
+import NewIngredient from './NewIngredient'
 
 export default {
   props: [
@@ -55,7 +59,8 @@ export default {
   ],
   data () {
     return {
-      name: null
+      name: null,
+      showIngredientDialog: false
     }
   },
   methods: {
@@ -67,12 +72,12 @@ export default {
         this.$emit('unselectIngredient')
       }
     },
-    createNewIngredient () {
-      let id = this.ingredients.map(x => x.id).reduce(Math.max, 0) + 1
+    createNewIngredient (nutrients) {
+      let id = this.ingredients.map(x => x.id).reduce((a, b) => Math.max(a, b), 0) + 1
       this.$emit('newIngredient', {
         id,
         name: this.name,
-        calories: id * 3 + 10
+        ...nutrients
       })
       this.$emit('selectIngredient', { id })
     }
@@ -98,6 +103,7 @@ export default {
   },
   components: {
     Nutrients,
+    NewIngredient,
     // IngredientSelector
   }
 }

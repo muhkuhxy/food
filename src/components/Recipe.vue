@@ -15,7 +15,7 @@
         </Ingredient>
       </div>
       <div class="md-layout-item md-size-20">
-        <md-card md-with-hover>
+        <md-card>
           <md-card-header class="md-layout">
             <md-button @click="addIngredient({ recipeId: id })" class="md-layout-item">Zutat hinzufügen</md-button>
           </md-card-header>
