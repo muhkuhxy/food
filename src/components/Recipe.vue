@@ -1,36 +1,33 @@
 <template>
   <div>
-    <h2>Rezept</h2>
+    <h1>Rezept</h1>
     <label>Name <input type="text" v-model="recipe.name" @change="changeName({ name: $event.target.value, id })"></label>
-    <div>Gesamt: {{ totalAmount }}</div>
+    <!-- <div>Gesamt: {{ totalAmount }}</div> -->
     <div>Kalorien pro 100g: {{ calsPer100 }}</div>
-    <h3>Zutaten <button @click="addIngredient">+</button></h3>
-    <div v-for="(ingredientRef, index) in recipe.ingredients" :key="index">
-      <button @click="removeIngredient(index)">-</button>
-      <IngredientSelector :id="ingredientRef.id"
-        @matchingIngredient="ingredientMatched($event, index)"
-        @noMatchingIngredient="unmatchedIngredient(index)"
-        @saveIngredient="ingredientSaved(index, $event)">
-      </IngredientSelector>
-      <label>Menge <input type="number" v-model="ingredientRef.amount"/>
-      </label>
-      <Nutrients :id="ingredientRef.id"></Nutrients>
+    <div class="md-layout md-gutter">
+      <div v-for="(ingredientRef, ingredientIndex) in recipe.ingredients" :key="ingredientIndex" class="md-layout-item md-size-20">
+        <Ingredient :ingredientRef="ingredientRef"
+          @removeIngredient="removeIngredient({ recipeId: id, ingredientIndex })"
+          @newIngredient="newIngredient"
+          @selectIngredient="selectIngredient({ recipeId: id, ingredientIndex: ingredientIndex, selectedId: $event.id })"
+          @unselectIngredient="unselectIngredient({ recipeId: id, ingredientIndex: ingredientIndex })"
+          @changeAmount="changeAmount({ recipeId: id, ingredientIndex: ingredientIndex, amount: $event })">
+        </Ingredient>
+      </div>
+      <div class="md-layout-item md-size-20">
+        <md-card md-with-hover>
+          <md-card-header class="md-layout">
+            <md-button @click="addIngredient({ recipeId: id })" class="md-layout-item">Zutat hinzufügen</md-button>
+          </md-card-header>
+        </md-card>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-import Vue from 'vue'
 import { mapState, mapMutations, mapGetters } from 'vuex'
-import Nutrients from './Nutrients.vue'
-import IngredientSelector from './IngredientSelector.vue'
-
-function save () {
-  this.changeRecipe({
-    id: this.id,
-    recipe: this.recipe,
-  })
-}
+import Ingredient from './Ingredient'
 
 export default {
   props: ['id'],
@@ -49,8 +46,7 @@ export default {
     this.recipe = this.recipes[this.id]
   },
   components: {
-    Nutrients,
-    IngredientSelector
+    Ingredient
   },
   computed: {
     ...mapState(['recipes', 'ingredients']),
@@ -74,37 +70,7 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['load', 'changeName', 'changeRecipe', 'saveIngredient']),
-    changeIngredient (event, index) {
-      // console.log(`changing ${index}'s ${event.field} to ${event.value}`)
-      this.recipe.ingredients[index][event.field] = event.value
-      save.call(this)
-    },
-    addIngredient () {
-      if (!this.recipe.ingredients) {
-        Vue.set(this.recipe, 'ingredients', [])
-      }
-      this.recipe.ingredients.push({
-        id: null,
-        amount: null
-      })
-      save.call(this)
-    },
-    removeIngredient (index) {
-      this.recipe.ingredients.splice(index, 1)
-      save.call(this)
-    },
-    ingredientMatched (ingredient, index) {
-      this.recipe.ingredients[index].id = ingredient.id
-    },
-    unmatchedIngredient (index) {
-      this.recipe.ingredients[index].id = null
-    },
-    ingredientSaved (index, name) {
-      let id = Math.max.apply(null, this.ingredients.map(x => x.id)) + 1
-      this.saveIngredient({ name, id })
-      this.recipe.ingredients[index].id = id
-    }
+    ...mapMutations(['load', 'changeName', 'changeRecipe', 'saveIngredient', 'addIngredient', 'removeIngredient', 'newIngredient', 'selectIngredient', 'unselectIngredient', 'changeAmount']),
   }
 }
 </script>
