@@ -1,23 +1,27 @@
 <template>
   <div>
-    <h1>Rezept</h1>
-    <label>Name <input type="text" v-model="recipe.name" @change="changeName({ name: $event.target.value, id })"></label>
-    <!-- <div>Gesamt: {{ totalAmount }}</div> -->
-    <div>Kalorien pro 100g: {{ calsPer100 }}</div>
+    <h1>{{ recipe.name }}</h1>
+    <div class="md-layout md-gutter recipe-info">
+      <md-field class="md-layout-item md-size-50">
+        <label>Neues Rezept</label>
+        <md-input v-model="recipe.name" @change="changeName({ name: $event.target.value, recipeIndex: id })"></md-input>
+      </md-field>
+      <div>Kalorien pro 100g: {{ calsPer100 }}</div>
+    </div>
     <div class="md-layout md-gutter">
-      <div v-for="(ingredientRef, ingredientIndex) in recipe.ingredients" :key="ingredientIndex" class="md-layout-item md-size-20">
+      <div v-for="(ingredientRef, ingredientIndex) in recipe.ingredients" :key="ingredientIndex" class="md-layout-item md-size-20 ingredient">
         <Ingredient :ingredientRef="ingredientRef"
-          @removeIngredient="removeIngredient({ recipeId: id, ingredientIndex })"
+          @removeIngredient="removeIngredient({ recipeIndex: id, ingredientIndex })"
           @newIngredient="newIngredient"
-          @selectIngredient="selectIngredient({ recipeId: id, ingredientIndex: ingredientIndex, selectedId: $event.id })"
-          @unselectIngredient="unselectIngredient({ recipeId: id, ingredientIndex: ingredientIndex })"
-          @changeAmount="changeAmount({ recipeId: id, ingredientIndex: ingredientIndex, amount: $event })">
+          @selectIngredient="selectIngredient({ recipeIndex: id, ingredientIndex: ingredientIndex, selectedId: $event.id })"
+          @unselectIngredient="unselectIngredient({ recipeIndex: id, ingredientIndex: ingredientIndex })"
+          @changeAmount="changeAmount({ recipeIndex: id, ingredientIndex: ingredientIndex, amount: $event })">
         </Ingredient>
       </div>
-      <div class="md-layout-item md-size-20">
+      <div class="md-layout-item md-size-20 ingredient">
         <md-card>
           <md-card-header class="md-layout">
-            <md-button @click="addIngredient({ recipeId: id })" class="md-layout-item">Zutat hinzufügen</md-button>
+            <md-button @click="addIngredient({ recipeIndex: id })" class="md-layout-item">Zutat hinzufügen</md-button>
           </md-card-header>
         </md-card>
       </div>
@@ -25,9 +29,19 @@
   </div>
 </template>
 
+<style>
+.recipe-info {
+  flex-direction: column;
+}
+.ingredient {
+  margin-top: 2rem;
+}
+</style>
+
 <script>
 import { mapState, mapMutations, mapGetters } from 'vuex'
 import Ingredient from './Ingredient'
+import { caloriesPer100g } from '../foodMath'
 
 export default {
   props: ['id'],
@@ -51,22 +65,8 @@ export default {
   computed: {
     ...mapState(['recipes', 'ingredients']),
     ...mapGetters(['ingredientsById']),
-    totalAmount () {
-      return this.recipe.ingredients.reduce((memo, ingredient) => {
-        return ingredient.amount == null ? memo : memo + +ingredient.amount
-      }, 0)
-    },
     calsPer100 () {
-      const total = this.totalAmount
-      const exact = this.recipe.ingredients.reduce((memo, ingredient) => {
-        if (ingredient.amount == null || ingredient.id == null) {
-          return memo
-        }
-        else {
-          return memo + (+ingredient.amount * this.ingredientsById[ingredient.id].calories / total)
-        }
-      }, 0)
-      return (isNaN(exact) ? 0 : exact).toFixed(2)
+      return caloriesPer100g(this.recipe.ingredients, this.ingredientsById)
     }
   },
   methods: {

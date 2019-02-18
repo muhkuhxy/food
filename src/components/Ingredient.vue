@@ -104,7 +104,6 @@ export default {
   components: {
     Nutrients,
     NewIngredient,
-    // IngredientSelector
   }
 }
 </script>

@@ -22,25 +22,28 @@ export default new Vuex.Store({
     newRecipe (state, name) {
       state.recipes.push({
         name,
-        ingredients: [],
-        amounts: []
+        ingredients: []
       })
       util.save(state)
     },
-    changeName (state, { name, id }) {
-      state.recipes[id].name = name
+    removeRecipe (state, recipeIndex) {
+      state.recipes.splice(recipeIndex, 1)
       util.save(state)
     },
-    changeRecipe (state, { recipe, id }) {
-      state.recipes[id] = recipe
+    changeName (state, { name, recipeIndex }) {
+      state.recipes[recipeIndex].name = name
       util.save(state)
     },
-    changeAmount (state, { recipeId, ingredientIndex, amount } ) {
-      state.recipes[recipeId].ingredients[ingredientIndex].amount = amount
+    changeRecipe (state, { recipe, recipeIndex }) {
+      state.recipes[recipeIndex] = recipe
       util.save(state)
     },
-    addIngredient (state, { recipeId }) {
-      let recipe = state.recipes[recipeId]
+    changeAmount (state, { recipeIndex, ingredientIndex, amount } ) {
+      state.recipes[recipeIndex].ingredients[ingredientIndex].amount = amount
+      util.save(state)
+    },
+    addIngredient (state, { recipeIndex }) {
+      let recipe = state.recipes[recipeIndex]
       if (!recipe.ingredients) {
         Vue.set(recipe, 'ingredients', [])
       }
@@ -50,16 +53,16 @@ export default new Vuex.Store({
       })
       util.save(state)
     },
-    removeIngredient (state, { recipeId, ingredientIndex }) {
-      state.recipes[recipeId].ingredients.splice(ingredientIndex, 1)
+    removeIngredient (state, { recipeIndex, ingredientIndex }) {
+      state.recipes[recipeIndex].ingredients.splice(ingredientIndex, 1)
       util.save(state)
     },
-    selectIngredient (state, { recipeId, ingredientIndex, selectedId }) {
-      state.recipes[recipeId].ingredients[ingredientIndex].id = selectedId
+    selectIngredient (state, { recipeIndex, ingredientIndex, selectedId }) {
+      state.recipes[recipeIndex].ingredients[ingredientIndex].id = selectedId
       util.save(state)
     },
-    unselectIngredient (state, { recipeId, ingredientIndex }) {
-      state.recipes[recipeId].ingredients[ingredientIndex].id = null
+    unselectIngredient (state, { recipeIndex, ingredientIndex }) {
+      state.recipes[recipeIndex].ingredients[ingredientIndex].id = null
       util.save(state)
     },
     newIngredient (state, ingredient) {
