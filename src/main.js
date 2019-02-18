@@ -3,7 +3,7 @@ import App from './App.vue'
 import store from './store'
 import router from './router'
 
-import { MdCard, MdField, MdButton, MdAutocomplete, MdMenu, MdList, MdHighlightText, MdDialog } from 'vue-material/dist/components'
+import { MdCard, MdField, MdButton, MdAutocomplete, MdMenu, MdList, MdHighlightText, MdDialog, MdDivider } from 'vue-material/dist/components'
 import 'vue-material/dist/vue-material.min.css'
 import 'vue-material/dist/theme/default.css'
 
@@ -15,6 +15,7 @@ Vue.use(MdMenu)
 Vue.use(MdList)
 Vue.use(MdHighlightText)
 Vue.use(MdDialog)
+Vue.use(MdDivider)
 
 Vue.config.productionTip = false
 

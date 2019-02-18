@@ -2,14 +2,14 @@
   <div>
     <h1>{{ recipe.name }}</h1>
     <div class="md-layout md-gutter recipe-info">
-      <md-field class="md-layout-item md-size-50">
+      <md-field class="md-layout-item md-size-50 md-small-size-100">
         <label>Neues Rezept</label>
         <md-input v-model="recipe.name" @change="changeName({ name: $event.target.value, recipeIndex: id })"></md-input>
       </md-field>
       <div>Kalorien pro 100g: {{ calsPer100 }}</div>
     </div>
     <div class="md-layout md-gutter">
-      <div v-for="(ingredientRef, ingredientIndex) in recipe.ingredients" :key="ingredientIndex" class="md-layout-item md-size-20 ingredient">
+      <div v-for="(ingredientRef, ingredientIndex) in recipe.ingredients" :key="ingredientIndex" class="md-layout-item md-size-20 md-medium-size-25 md-small-size-50 md-xsmall-size-100 ingredient">
         <Ingredient :ingredientRef="ingredientRef"
           @removeIngredient="removeIngredient({ recipeIndex: id, ingredientIndex })"
           @newIngredient="newIngredient"
@@ -18,7 +18,7 @@
           @changeAmount="changeAmount({ recipeIndex: id, ingredientIndex: ingredientIndex, amount: $event })">
         </Ingredient>
       </div>
-      <div class="md-layout-item md-size-20 ingredient">
+      <div class="md-layout-item md-size-20 md-small-size-50 md-xsmall-size-100 ingredient">
         <md-card>
           <md-card-header class="md-layout">
             <md-button @click="addIngredient({ recipeIndex: id })" class="md-layout-item">Zutat hinzufügen</md-button>

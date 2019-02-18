@@ -1,7 +1,7 @@
 <template>
   <md-dialog :md-active.sync="active" :md-click-outside-to-close="false">
     <md-dialog-title>{{ name }} anlegen</md-dialog-title>
-    <md-button :href="`https://www.google.com/search?q=${this.name}+nährwerte`" class="md-primary">Google</md-button>
+    <md-button :href="`https://www.google.com/search?q=${this.name}+nährwerte`" target="_blank" class="md-primary">Google</md-button>
     <md-dialog-content>
       <md-field>
         <label>Kalorien</label>

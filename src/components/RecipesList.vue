@@ -4,6 +4,7 @@
         <md-list-item>
           <a @click.prevent="add" href="#" class="md-list-item-text md-accent">Neues Rezept</a>
         </md-list-item>
+        <md-divider></md-divider>
         <md-list-item v-for="(recipe, index) in recipes" :key="index">
           <span class="md-list-item-text">
             <router-link :to="{ path: `/recipe/${index}` }">{{ recipe.name }}</router-link>
