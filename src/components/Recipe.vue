@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1>{{ recipe.name }}</h1>
-    <div class="md-layout md-gutter recipe-info">
+    <div class="md-layout recipe-info">
       <md-field class="md-layout-item md-size-50 md-small-size-100">
         <label>Neues Rezept</label>
         <md-input v-model="recipe.name" @change="changeName({ name: $event.target.value, recipeIndex: id })"></md-input>
@@ -18,7 +18,7 @@
           @changeAmount="changeAmount({ recipeIndex: id, ingredientIndex: ingredientIndex, amount: $event })">
         </Ingredient>
       </div>
-      <div class="md-layout-item md-size-20 md-small-size-50 md-xsmall-size-100 ingredient">
+      <div class="ingredient md-layout-item md-size-20 md-small-size-50 md-xsmall-size-100">
         <md-card>
           <md-card-header class="md-layout">
             <md-button @click="addIngredient({ recipeIndex: id })" class="md-layout-item">Zutat hinzufügen</md-button>
