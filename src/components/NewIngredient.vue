@@ -1,5 +1,5 @@
 <template>
-  <md-dialog :md-active.sync="active" :md-click-outside-to-close="false">
+  <md-dialog :md-active="active" @md-clicked-outside="$emit('update:active', false)">
     <md-dialog-title>{{ name }} anlegen</md-dialog-title>
     <md-button :href="`https://www.google.com/search?q=${this.name}+nährwerte`" target="_blank" class="md-primary">Google</md-button>
     <md-dialog-content>
@@ -21,7 +21,7 @@
       </md-field>
     </md-dialog-content>
     <md-dialog-actions>
-      <md-button class="md-accent" @click="$emit('close')">Abbrechen</md-button>
+      <md-button class="md-accent" @click="$emit('update:active', false)">Abbrechen</md-button>
       <md-button class="md-primary" @click="save">Speichern</md-button>
     </md-dialog-actions>
   </md-dialog>

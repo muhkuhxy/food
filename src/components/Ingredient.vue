@@ -34,7 +34,7 @@
         </md-card-expand-content>
       </md-card-expand>
     </md-card>
-    <NewIngredient :active="showIngredientDialog" :name="name" @close="showIngredientDialog = false" @save="createNewIngredient($event); showIngredientDialog = false"></NewIngredient>
+    <NewIngredient :active.sync="showIngredientDialog" :name="name" @save="createNewIngredient($event); showIngredientDialog = false"></NewIngredient>
   </div>
 </template>
 

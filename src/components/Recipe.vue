@@ -9,7 +9,7 @@
       <div>Kalorien pro 100g: {{ calsPer100 }}</div>
     </div>
     <div class="md-layout md-gutter">
-      <div v-for="(ingredientRef, ingredientIndex) in recipe.ingredients" :key="ingredientIndex" class="md-layout-item md-size-20 md-medium-size-25 md-small-size-50 md-xsmall-size-100 ingredient">
+      <div v-for="(ingredientRef, ingredientIndex) in recipe.ingredients" :key="ingredientIndex" class="ingredient md-layout-item md-size-20 md-medium-size-25 md-small-size-50 md-xsmall-size-100">
         <Ingredient :ingredientRef="ingredientRef"
           @removeIngredient="removeIngredient({ recipeIndex: id, ingredientIndex })"
           @newIngredient="newIngredient"
